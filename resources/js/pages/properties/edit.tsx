@@ -1,30 +1,50 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from "@inertiajs/react";
 
-export default function Create() {
-    const { data, setData, post, processing, errors } = useForm({
-        title: '',
-        price: '',
-        location: '',
-        property_type: '',
-        bedrooms: '',
-        bathrooms: '',
-        status: '',
-        description: '',
+
+type Property = {
+    id: number;
+    title: string;
+    price: number;
+    location: string;
+    property_type: string;
+    bedrooms: number;
+    bathrooms: number;
+    status: string;
+    description: string | null;
+};
+
+type Props = {
+
+    property: Property;
+}
+
+
+export default function Edit({ property }: Props) {
+    const { data, setData, put, processing, errors } = useForm({
+        title: property.title,
+        price: String(property.price),
+        location: property.location,
+        property_type: property.property_type,
+        bedrooms: String(property.bedrooms),
+        bathrooms: String(property.bathrooms),
+        status: property.status,
+        description: property.description ?? '',
     });
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
 
-        post('/properties');
+        put(`/properties/${property.id}`);
     }
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="mx-auto max-w-7xl">
+
                 <div className="mb-8 flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold">
-                            Create Properties
+                            Edit {property.title} Property
                         </h1>
 
                         <p className="mt-1 text-gray-500">
@@ -40,11 +60,11 @@ export default function Create() {
                     </Link>
                 </div>
 
-
                 <form
                     onSubmit={submit}
                     className="space-y-6 rounded-xl border bg-white p-6 shadow-sm"
                 >
+
                     <div>
                         <label className="mb-2 block text-sm font-medium">
                             Title
@@ -57,7 +77,6 @@ export default function Create() {
                                 setData('title', e.target.value)
                             }
                             className="w-full rounded-lg border px-3 py-2"
-                            placeholder="Luxury Apartment"
                         />
 
                         {errors.title && (
@@ -79,7 +98,6 @@ export default function Create() {
                                 setData('price', e.target.value)
                             }
                             className="w-full rounded-lg border px-3 py-2"
-                            placeholder="1500000"
                         />
 
                         {errors.price && (
@@ -101,7 +119,6 @@ export default function Create() {
                                 setData('location', e.target.value)
                             }
                             className="w-full rounded-lg border px-3 py-2"
-                            placeholder="Dubai Marina"
                         />
 
                         {errors.location && (
@@ -112,6 +129,7 @@ export default function Create() {
                     </div>
 
                     <div className="grid gap-6 sm:grid-cols-2">
+
                         <div>
                             <label className="mb-2 block text-sm font-medium">
                                 Property Type
@@ -127,18 +145,18 @@ export default function Create() {
                                 }
                                 className="w-full rounded-lg border px-3 py-2"
                             >
-                                <option value="">
-                                    Select type
-                                </option>
                                 <option value="Apartment">
                                     Apartment
                                 </option>
+
                                 <option value="Villa">
                                     Villa
                                 </option>
+
                                 <option value="Townhouse">
                                     Townhouse
                                 </option>
+
                                 <option value="Office">
                                     Office
                                 </option>
@@ -166,18 +184,18 @@ export default function Create() {
                                 }
                                 className="w-full rounded-lg border px-3 py-2"
                             >
-                                <option value="">
-                                    Select status
-                                </option>
                                 <option value="For Sale">
                                     For Sale
                                 </option>
+
                                 <option value="For Rent">
                                     For Rent
                                 </option>
+
                                 <option value="Sold">
                                     Sold
                                 </option>
+
                                 <option value="Rented">
                                     Rented
                                 </option>
@@ -189,9 +207,11 @@ export default function Create() {
                                 </p>
                             )}
                         </div>
+
                     </div>
 
                     <div className="grid gap-6 sm:grid-cols-2">
+
                         <div>
                             <label className="mb-2 block text-sm font-medium">
                                 Bedrooms
@@ -241,6 +261,7 @@ export default function Create() {
                                 </p>
                             )}
                         </div>
+
                     </div>
 
                     <div>
@@ -258,7 +279,6 @@ export default function Create() {
                             }
                             rows={5}
                             className="w-full rounded-lg border px-3 py-2"
-                            placeholder="Property description..."
                         />
 
                         {errors.description && (
@@ -275,10 +295,11 @@ export default function Create() {
                             className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
                         >
                             {processing
-                                ? 'Creating...'
-                                : 'Create Property'}
+                                ? 'Updating...'
+                                : 'Update Property'}
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>
